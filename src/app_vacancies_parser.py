@@ -36,23 +36,23 @@ class VacanciesParserApp:
                     else:
                         print("Ошибка ввода")
 
+                self.search_vacancies()
+
                 while True:
                     print("""\n1. Сортировка по дате\n2. Сортировка по окладу""")
                     choice_sorted = input("Выберите сортировку: ")
                     if choice_sorted == "1":
-                        # cls.sort_vacancies_for_date()
+                        self.sort_vacancies_by_date()
                         break
                     elif choice_sorted == "2":
-                        # cls.sort_vacancies_for_salary()
+                        self.sort_vacancies_by_salary()
                         break
                     else:
                         print("Ошибка ввода")
 
-                self.search_vacancies()
-
             elif choice_menu == "2":
-                pass
-                # cls.display_vacancies()
+                self.display_vacancies()
+
             elif choice_menu == "3":
                 if self.__vacancies:
                     # cls.save_vacancies_to_files()
@@ -64,8 +64,31 @@ class VacanciesParserApp:
             else:
                 print("Ошибка ввода")
 
-    def search_vacancies(self):
-        vacancies = self.__site_to_parse.search_vacancies(job_title=self.__job_title,
-                                                          number_of_vacancies=self.__amount_vacancy)
-        for vacancy in vacancies:
-            print(repr(vacancy))
+    def search_vacancies(self) -> None:
+        """
+        Собирает вакансии по выбранным критериям
+        """
+        self.__vacancies = self.__site_to_parse.search_vacancies(job_title=self.__job_title,
+                                                                 number_of_vacancies=self.__amount_vacancy)
+
+    def filter_vacancies(self) -> None:
+        """Фильтрация вакансий по названию профессии"""
+        self.__vacancies = list(filter(lambda x: self.__job_title.lower() in x.title.lower() and x.salary is not None,
+                                       self.__vacancies))
+
+    def sort_vacancies_by_salary(self) -> None:
+        """Сортировка вакансий по окладу."""
+        self.__vacancies = sorted(self.__vacancies, key=lambda x: x.medium_salary, reverse=True)
+
+    def sort_vacancies_by_date(self) -> None:
+        """Сортировка вакансий по дате публикации."""
+        self.__vacancies = sorted(self.__vacancies, key=lambda x: x.pub_date, reverse=True)[
+                          :self.__amount_vacancy]
+
+    def display_vacancies(self) -> None:
+        """Отображение вакансий"""
+        if self.__vacancies:
+            for vacancy in self.__vacancies:
+                print(repr(vacancy))
+        else:
+            print("Нет доступных вакансий.")

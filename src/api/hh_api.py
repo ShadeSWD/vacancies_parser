@@ -39,9 +39,12 @@ class HeadHunterAPI(BaseAPI):
         vacancies = []
 
         for item in response_json.get("items", []):
-            vacancy = Vacancy(title=self.get_title(item), url=self.get_url(item), salary=self.get_salary(item),
-                              pub_date=self.get_pub_date(item))
-            vacancies.append(vacancy)
+            try:
+                vacancy = Vacancy(title=self.get_title(item), url=self.get_url(item), salary=self.get_salary(item),
+                                  pub_date=self.get_pub_date(item))
+                vacancies.append(vacancy)
+            except:
+                pass
 
         return vacancies
 
