@@ -1,0 +1,18 @@
+[tool.poetry]
+name = "vacancies-parser"
+version = "0.1.0"
+description = ""
+authors = ["Shade_SWD <seawolfy60@gmail.com>"]
+readme = "README.md"
+packages = [{include = "vacancies_parser"}]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+pytest = "^7.4.0"
+pytest-cov = "^4.1.0"
+requests = "^2.31.0"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
