@@ -1,5 +1,6 @@
 from src.vacancy import Vacancy
 from src.api.hh_api import HeadHunterAPI
+from src.api.superjob_api import SuperJobAPI
 
 
 class VacanciesParserApp:
@@ -7,7 +8,7 @@ class VacanciesParserApp:
         self.__vacancies: list['Vacancy'] = []
         self.__job_title: str | None = None
         self.__amount_vacancy: int | None = None
-        self.__available_sites = {'1': 'HeadHunter'}
+        self.__available_sites = {'1': 'HeadHunter', '2': 'SuperJob'}
         self.__site_to_parse = None
 
     def interact_with_user(self):
@@ -28,6 +29,9 @@ class VacanciesParserApp:
                     site_to_parse = input("Выберите платформу: ")
                     if site_to_parse == '1':
                         self.__site_to_parse = HeadHunterAPI()
+                        break
+                    elif site_to_parse == '2':
+                        self.__site_to_parse = SuperJobAPI()
                         break
                     else:
                         print("Ошибка ввода")

@@ -22,17 +22,17 @@ class BaseAPI(ABC):
         pass
 
     @staticmethod
-    def get_title(vacancy):
+    def get_title(vacancy) -> str:
         pass
 
     @staticmethod
-    def get_url(vacancy):
+    def get_url(vacancy) -> str:
         pass
 
     @staticmethod
-    def get_salary(vacancy):
+    def get_salary(vacancy) -> dict:
         pass
 
     @staticmethod
-    def get_pub_date(vacancy):
+    def get_pub_date(vacancy) -> str:
         pass
