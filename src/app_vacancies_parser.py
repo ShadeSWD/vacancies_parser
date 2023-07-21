@@ -18,58 +18,61 @@ class VacanciesParserApp:
             choice_menu = input("Выберите действие: ")
 
             if choice_menu == "1":
-
-                self.__job_title = input("\nВведите должность для поиска: ")
-                self.__amount_vacancy = int(input("Введите количество вакансий для поиска: "))
-
-                while True:
-                    print("\nДоступные платформы:")
-                    for number, site in self.__available_sites.items():
-                        print(f"{number}. {site}")
-                    site_to_parse = input("Выберите платформу: ")
-                    if site_to_parse == '1':
-                        self.__site_to_parse = HeadHunterAPI()
-                        break
-                    elif site_to_parse == '2':
-                        self.__site_to_parse = SuperJobAPI()
-                        break
-                    else:
-                        print("Ошибка ввода")
-
                 self.search_vacancies()
-
-                while True:
-                    print("""\n1. Сортировка по дате\n2. Сортировка по окладу""")
-                    choice_sorted = input("Выберите сортировку: ")
-                    if choice_sorted == "1":
-                        self.sort_vacancies_by_date()
-                        break
-                    elif choice_sorted == "2":
-                        self.sort_vacancies_by_salary()
-                        break
-                    else:
-                        print("Ошибка ввода")
+                self.sort_vacancies()
 
             elif choice_menu == "2":
                 self.display_vacancies()
 
             elif choice_menu == "3":
-                if self.__vacancies:
-                    # cls.save_vacancies_to_files()
-                    print("\nВакансии сохранены в файл.")
-                else:
-                    print("\nНет доступных вакансий для сохранения.")
+                self.save_vacancies_to_file()
+
             elif choice_menu == "4":
                 break
             else:
                 print("Ошибка ввода")
 
     def search_vacancies(self) -> None:
-        """
-        Собирает вакансии по выбранным критериям
-        """
+        """Собирает вакансии по выбранным критериям"""
+
+        self.__job_title = input("\nВведите должность для поиска: ")
+        self.__amount_vacancy = int(input("Введите количество вакансий для поиска: "))
+        self.choose_platform()
+
         self.__vacancies = self.__site_to_parse.search_vacancies(job_title=self.__job_title,
                                                                  number_of_vacancies=self.__amount_vacancy)
+
+    def choose_platform(self):
+        """Выбор онлайн-платформы"""
+
+        while True:
+            print("\nДоступные платформы:")
+            for number, site in self.__available_sites.items():
+                print(f"{number}. {site}")
+            site_to_parse = input("Выберите платформу: ")
+            if site_to_parse == '1':
+                self.__site_to_parse = HeadHunterAPI()
+                break
+            elif site_to_parse == '2':
+                self.__site_to_parse = SuperJobAPI()
+                break
+            else:
+                print("Ошибка ввода")
+
+    def sort_vacancies(self) -> None:
+        """Сортировка вакансий по выбранным критериям"""
+
+        while True:
+            print("""\n1. Сортировка по дате\n2. Сортировка по окладу""")
+            choice_sorted = input("Выберите сортировку: ")
+            if choice_sorted == "1":
+                self.sort_vacancies_by_date()
+                break
+            elif choice_sorted == "2":
+                self.sort_vacancies_by_salary()
+                break
+            else:
+                print("Ошибка ввода")
 
     def filter_vacancies(self) -> None:
         """Фильтрация вакансий по названию профессии"""
@@ -91,4 +94,10 @@ class VacanciesParserApp:
             for vacancy in self.__vacancies:
                 print(repr(vacancy))
         else:
-            print("Нет доступных вакансий.")
+            print("\nНет доступных вакансий.")
+
+    def save_vacancies_to_file(self):
+        if self.__vacancies:
+            print("\nВакансии сохранены в файл.")
+        else:
+            print("\nНет доступных вакансий для сохранения.")
