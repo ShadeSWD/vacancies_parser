@@ -35,8 +35,22 @@ class VacanciesParserApp:
     def search_vacancies(self) -> None:
         """Собирает вакансии по выбранным критериям"""
 
-        self.__job_title = input("\nВведите должность для поиска: ")
-        self.__amount_vacancy = int(input("Введите количество вакансий для поиска: "))
+        while True:
+            job_title = input("\nВведите должность для поиска: ")
+            if job_title:
+                self.__job_title = job_title
+                break
+            else:
+                print("Ошибка ввода")
+
+        while True:
+            amount_vacancy = input("\nВведите количество вакансий для поиска: ")
+            if amount_vacancy.isdigit():
+                self.__amount_vacancy = int(amount_vacancy)
+                break
+            else:
+                print("Ошибка ввода")
+
         self.choose_platform()
 
         self.__vacancies = self.__site_to_parse.search_vacancies(job_title=self.__job_title,
@@ -92,7 +106,7 @@ class VacanciesParserApp:
         """Отображение вакансий"""
         if self.__vacancies:
             for vacancy in self.__vacancies:
-                print(repr(vacancy))
+                print(vacancy)
             self.filter_vacancies()
         else:
             print("\nНет доступных вакансий.")
