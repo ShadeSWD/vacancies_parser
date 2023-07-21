@@ -5,7 +5,7 @@ from datetime import datetime
 class Vacancy:
     """Класс, представляющий информацию о вакансии"""
 
-    def __init__(self, title: str, url: str, salary: dict, pub_date: str):
+    def __init__(self, title: str, url: str, salary: dict, pub_date: str, requirements: str):
         """
         Инициализация объекта Vacancy.
 
@@ -13,12 +13,14 @@ class Vacancy:
         :param url: Ссылка на вакансию.
         :param salary: Зарплата {'min': int, 'max': int, 'currency': str}
         :param pub_date: Дата размещения вакансии в формате ISO
+        :param requirements: Требования к вакансии
         """
 
         self.__title = self.validate_title(title)
         self.__url = self.validate_url(url)
         self.__salary = self.validate_salary(salary)
         self.__pub_date = self.validate_pub_date(pub_date)
+        self.__requirements = self.validate_requirements(requirements)
 
     @property
     def title(self):
@@ -40,13 +42,18 @@ class Vacancy:
     def pub_date(self):
         return self.__pub_date
 
+    @property
+    def requirements(self):
+        return self.__requirements
+
     def __str__(self) -> str:
         """
         Возвращает строковое представление вакансии.
 
         :return: Строковое представление вакансии.
         """
-        return f'Вакансия "{self.title}" от {self.__pub_date}'
+        return f'Вакансия "{self.title}" от {self.__pub_date}, зарплата от {self.salary["min"]} ' \
+               f'до {self.salary["max"]} {self.salary["currency"]}'
 
     def __repr__(self) -> str:
         """
@@ -54,7 +61,8 @@ class Vacancy:
 
         :return: Представление вакансии в виде строки.
         """
-        return f"Vacancy(title={self.title}, url={self.url}, salary={self.salary}, pub_date={self.pub_date})"
+        return f"Vacancy(title={self.title}, url={self.url}, salary={self.salary}, pub_date={self.pub_date}, " \
+               f"requirements={self.requirements})"
 
     def __eq__(self, other: 'Vacancy') -> bool:
         """
@@ -155,12 +163,26 @@ class Vacancy:
         else:
             raise Exception('Неверный формат даты')
 
+    @staticmethod
+    def validate_requirements(requirements: str) -> str:
+        """
+        Валидирует требования к вакансии
+
+        :param requirements: дата публикации вакансии в формате ISO
+        :return: требования к вакансии
+        """
+
+        if requirements:
+            return requirements
+        else:
+            raise Exception('Требования отсутствуют')
+
     def validate_data(self) -> bool:
         """
         Проверяет, являются ли все данные вакансии валидными.
 
         :return: True, если все данные валидны, иначе False.
         """
-        if not all([self.title, self.url, self.salary, self.pub_date]):
+        if not all([self.title, self.url, self.salary, self.pub_date, self.requirements]):
             return False
         raise Exception('Некоторые атрибуты вакансии не заданы')

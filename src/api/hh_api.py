@@ -41,7 +41,7 @@ class HeadHunterAPI(BaseAPI):
         for item in response_json.get("items", []):
             try:
                 vacancy = Vacancy(title=self.get_title(item), url=self.get_url(item), salary=self.get_salary(item),
-                                  pub_date=self.get_pub_date(item))
+                                  pub_date=self.get_pub_date(item), requirements=self.get_requirements(item))
                 vacancies.append(vacancy)
             except:
                 pass
@@ -68,3 +68,7 @@ class HeadHunterAPI(BaseAPI):
     @staticmethod
     def get_pub_date(vacancy) -> str:
         return str(datetime.fromisoformat(vacancy['published_at'][:10]).date())
+
+    @staticmethod
+    def get_requirements(vacancy) -> str:
+        return vacancy['snippet']['requirement']

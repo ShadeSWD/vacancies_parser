@@ -38,10 +38,14 @@ class SuperJobAPI(BaseAPI):
         data = response.json()
 
         vacancies = []
-        for item in data.get("objects", []):
-            vacancy = Vacancy(title=self.get_title(item), url=self.get_url(item), salary=self.get_salary(item),
-                              pub_date=self.get_pub_date(item))
-            vacancies.append(vacancy)
+
+        try:
+            for item in data.get("objects", []):
+                vacancy = Vacancy(title=self.get_title(item), url=self.get_url(item), salary=self.get_salary(item),
+                                  pub_date=self.get_pub_date(item), requirements=self.get_requirements(item))
+                vacancies.append(vacancy)
+        except ZeroDivisionError:
+            pass
 
         return vacancies
 
@@ -55,8 +59,10 @@ class SuperJobAPI(BaseAPI):
 
     @staticmethod
     def get_salary(vacancy) -> dict:
-        salary = {'min': int(vacancy['payment_from']), 'currency': 'RUR'}
-        if vacancy['payment_to'] is None:
+        salary = {'min': int(vacancy['payment_from']), 'currency': vacancy['currency']}
+        if salary['min'] is None:
+            salary['min'] = 0
+        if vacancy['payment_to'] == (None or 0):
             salary['max'] = salary['min']
         else:
             salary['max'] = int(vacancy['payment_to'])
@@ -65,3 +71,7 @@ class SuperJobAPI(BaseAPI):
     @staticmethod
     def get_pub_date(vacancy) -> str:
         return str(datetime.utcfromtimestamp(vacancy["date_published"]).date())
+
+    @staticmethod
+    def get_requirements(vacancy) -> str:
+        return vacancy['candidat']

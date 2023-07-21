@@ -36,3 +36,7 @@ class BaseAPI(ABC):
     @staticmethod
     def get_pub_date(vacancy) -> str:
         pass
+
+    @staticmethod
+    def get_requirements(vacancy) -> str:
+        pass

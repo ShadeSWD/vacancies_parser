@@ -74,9 +74,9 @@ class VacanciesParserApp:
             else:
                 print("Ошибка ввода")
 
-    def filter_vacancies(self) -> None:
+    def filter_vacancies(self, keyword) -> None:
         """Фильтрация вакансий по названию профессии"""
-        self.__vacancies = list(filter(lambda x: self.__job_title.lower() in x.title.lower() and x.salary is not None,
+        self.__vacancies = list(filter(lambda x: keyword in x.title.lower(),
                                        self.__vacancies))
 
     def sort_vacancies_by_salary(self) -> None:
