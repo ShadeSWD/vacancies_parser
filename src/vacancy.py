@@ -61,8 +61,16 @@ class Vacancy:
 
         :return: Представление вакансии в виде строки.
         """
-        return f"Vacancy(title={self.title}, url={self.url}, salary={self.salary}, pub_date={self.pub_date}, " \
-               f"requirements={self.requirements})"
+        return f"Vacancy({self.__dict__()})"
+
+    def __dict__(self):
+        return {
+            'title': self.title,
+            'url': self.url,
+            'salary': self.salary,
+            'pub_date': self.pub_date,
+            'requirements': self.requirements
+        }
 
     def __eq__(self, other: 'Vacancy') -> bool:
         """

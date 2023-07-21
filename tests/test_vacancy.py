@@ -36,9 +36,9 @@ def test_vacancy_str(test_vacancy_1):
 
 
 def test_vacancy_repr(test_vacancy_1):
-    assert repr(test_vacancy_1) == "Vacancy(title=Тестовая вакансия один, url=https://www.google.com/, " \
-                                   "salary={'min': 1000, 'max': 10000, 'currency': 'rub'}," \
-                                   " pub_date=2023-05-28, requirements=git)"
+    assert repr(test_vacancy_1) == "Vacancy({'title': 'Тестовая вакансия один', 'url': 'https://www.google.com/', " \
+                                   "'salary': {'min': 1000, 'max': 10000, 'currency': 'rub'}, 'pub_date': " \
+                                   "'2023-05-28', 'requirements': 'git'})"
 
 
 def test_salary_medium_salary(test_vacancy_1):

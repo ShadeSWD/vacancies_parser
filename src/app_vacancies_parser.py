@@ -1,6 +1,7 @@
 from src.vacancy import Vacancy
 from src.api.hh_api import HeadHunterAPI
 from src.api.superjob_api import SuperJobAPI
+from src.file_handler.json_file_handler import JSONFileHandler
 
 
 class VacanciesParserApp:
@@ -10,11 +11,13 @@ class VacanciesParserApp:
         self.__amount_vacancy: int | None = None
         self.__available_sites = {'1': 'HeadHunter', '2': 'SuperJob'}
         self.__site_to_parse = None
+        self.__file_handler = JSONFileHandler()
 
-    def interact_with_user(self):
+    def interact_with_user(self) -> None:
         """ Взаимодействие с пользователем. """
         while True:
-            print("""\n1. Поиск вакансий\n2. Отобразить вакансии\n3. Сохранить вакансии в файл\n4. Выход""")
+            print("\n1. Поиск вакансий\n2. Отобразить вакансии\n3. Сохранить вакансии в файл\n"
+                  "4. Импортировать вакансии из файла\n5. Выход")
             choice_menu = input("Выберите действие: ")
 
             if choice_menu == "1":
@@ -28,6 +31,9 @@ class VacanciesParserApp:
                 self.save_vacancies_to_file()
 
             elif choice_menu == "4":
+                self.import_vacancies_from_file()
+
+            elif choice_menu == "5":
                 break
             else:
                 print("Ошибка ввода")
@@ -56,7 +62,7 @@ class VacanciesParserApp:
         self.__vacancies = self.__site_to_parse.search_vacancies(job_title=self.__job_title,
                                                                  number_of_vacancies=self.__amount_vacancy)
 
-    def choose_platform(self):
+    def choose_platform(self) -> None:
         """Выбор онлайн-платформы"""
 
         while True:
@@ -100,7 +106,7 @@ class VacanciesParserApp:
     def sort_vacancies_by_date(self) -> None:
         """Сортировка вакансий по дате публикации."""
         self.__vacancies = sorted(self.__vacancies, key=lambda x: x.pub_date, reverse=True)[
-                          :self.__amount_vacancy]
+                           :self.__amount_vacancy]
 
     def display_vacancies(self) -> None:
         """Отображение вакансий"""
@@ -111,7 +117,7 @@ class VacanciesParserApp:
         else:
             print("\nНет доступных вакансий.")
 
-    def filter_vacancies(self):
+    def filter_vacancies(self) -> None:
         """Фильтрует вакансии по ключевому слову"""
 
         while True:
@@ -126,8 +132,19 @@ class VacanciesParserApp:
             else:
                 print("Ошибка ввода")
 
-    def save_vacancies_to_file(self):
+    def save_vacancies_to_file(self) -> None:
+        """Сохраняет вакансии в файл"""
+
         if self.__vacancies:
+            filename = input("\nВведите название файла: ")
+            self.__file_handler.add_vacancies(vacancies=self.__vacancies, filename=filename)
             print("\nВакансии сохранены в файл.")
         else:
             print("\nНет доступных вакансий для сохранения.")
+
+    def import_vacancies_from_file(self):
+        try:
+            filename = input("\nВведите название файла: ")
+            self.__vacancies = self.__file_handler.get_vacancies(filename=filename)
+        except FileNotFoundError:
+            print("Файла не существует")
