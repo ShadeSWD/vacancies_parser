@@ -44,7 +44,7 @@ class SuperJobAPI(BaseAPI):
                 vacancy = Vacancy(title=self.get_title(item), url=self.get_url(item), salary=self.get_salary(item),
                                   pub_date=self.get_pub_date(item), requirements=self.get_requirements(item))
                 vacancies.append(vacancy)
-        except ZeroDivisionError:
+        except:
             pass
 
         return vacancies

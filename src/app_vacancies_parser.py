@@ -74,9 +74,9 @@ class VacanciesParserApp:
             else:
                 print("Ошибка ввода")
 
-    def filter_vacancies(self, keyword) -> None:
+    def filter_vacancies_by_keyword_in_requirements(self, keyword) -> None:
         """Фильтрация вакансий по названию профессии"""
-        self.__vacancies = list(filter(lambda x: keyword in x.title.lower(),
+        self.__vacancies = list(filter(lambda x: keyword.lower() in x.requirements.lower(),
                                        self.__vacancies))
 
     def sort_vacancies_by_salary(self) -> None:
@@ -93,8 +93,24 @@ class VacanciesParserApp:
         if self.__vacancies:
             for vacancy in self.__vacancies:
                 print(repr(vacancy))
+            self.filter_vacancies()
         else:
             print("\nНет доступных вакансий.")
+
+    def filter_vacancies(self):
+        """Фильтрует вакансии по ключевому слову"""
+
+        while True:
+            print("\n1. Отфильтровать вакансии\n2. Оставить как есть")
+            choice_filter = input('Выберите действие: ')
+            if choice_filter == "1":
+                keyword = input("Введите ключевое слово: ")
+                self.filter_vacancies_by_keyword_in_requirements(keyword)
+                break
+            elif choice_filter == "2":
+                break
+            else:
+                print("Ошибка ввода")
 
     def save_vacancies_to_file(self):
         if self.__vacancies:
